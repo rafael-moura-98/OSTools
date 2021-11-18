@@ -1,5 +1,5 @@
 def isOperand(char) -> bool:
-    if char in "123456789x":
+    if char in "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ":
         return True
     else:
         return False
@@ -7,7 +7,7 @@ def isOperand(char) -> bool:
 
 def isOperator(char)  -> bool:
     """ Return True if the passed char is a operator """
-    if char in "-+*/^(":
+    if char in "-+*/^":
         return True
     else:
         return False
@@ -34,8 +34,8 @@ def operatorsComparison(op1: str, op2: str) -> bool:
 
     Operators are organized in this order: 
 
-    | Operators | - | + | * | / | ^ | ( |
-    | Values    | 1 | 2 | 3 | 4 | 5 | 6 |
+    | Operators | - | + | * | / | ^ |
+    | Values    | 1 | 2 | 3 | 4 | 5 |
 
     Ex.: '^' is higher than '+' 
 
@@ -46,9 +46,10 @@ def operatorsComparison(op1: str, op2: str) -> bool:
     """
       
     if not isOperator(op1) or not isOperator(op2):
-        return "Error: 000033 - Missuse of comparison function"
+        return "Error: 000033 - Missuse of comparison function.\
+        Make sure both paramerets are operators"
 
-    operator_order = ['+', '-', '*', '/', '^', '(']
+    operator_order = ['+', '-', '*', '/', '^']
 
     if operator_order.index(op2) > operator_order.index(op1):
         return True
@@ -70,20 +71,19 @@ def toPostfix(infix: str) -> str:
     postfix = ''
 
     for char in infix:
-        print(stack)
         if isOperand(char):
             postfix += char
 
         elif isOperator(char):
             if isEmpty(stack):  # If stack is empty
                 stack.append(char)
-
+    
             elif operatorsComparison(stack[-1], char):
-                #  In case char is higher than the top char on stack
+                #  In case char priority is higher than the top character on stack
                 stack.append(char)
-
-            else:
-                #  In case the top char on stack is higher than char itself
+        
+            elif (operatorsComparison(stack[-1], char) == False):
+                #  In case char priority is lower than the top character on stack
                 postfix += stack.pop()
                 while(not isEmpty(stack)):
                     if not operatorsComparison(stack[-1], char):
@@ -91,21 +91,33 @@ def toPostfix(infix: str) -> str:
                     else:
                         break
                 stack.append(char)
-      
+
+        elif char == "(":
+            stack.append(char)
+
         elif char == ")":
             if isEmpty(stack):
-              while not isOpenParentheses(stack[-1]):
-                postfix += stack.pop()
-              postfix += stack.pop()
+                # This would only occur if a closing parentheses 
+                # is used without being opened before.
+                return "Error: 000061 - Bad parentheses use."
             else:
-              # This would only occur if a closing parentheses 
-              # is used without being opened before.
-              return "Error: 000061 - Bad parentheses use."
+                while not isOpenParentheses(stack[-1]):                        
+                    postfix += stack.pop()
+                    if isEmpty(stack):
+                        break
+
+                stack.pop()
+
+
         else:
-            return "Error: 000080 - Not expected value on expression."
+            return f"Error: 000080 - Value '{char}' not expected on expression."
+
+
+    while(not isEmpty(stack)):
+        postfix += stack.pop()
 
     return postfix
 
 
 # "MAIN"
-print(toPostfix("2+5*x"))
+print(toPostfix("K+L-M*N+(O^P)*W/U/V*T+Q"))
