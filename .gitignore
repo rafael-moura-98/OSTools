@@ -1,0 +1,6 @@
+#Folders
+test_files/
+__pycache__/
+
+#files
+*.log
