@@ -1,5 +1,6 @@
 def isOperand(char) -> bool:
-    if char in "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ":
+    if char in "123456789abcdefghijklmnopqrstuvwxyz"\
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
         return True
     else:
         return False
@@ -29,19 +30,42 @@ def isEmpty(listed) -> bool:
         return True
 
 
+def operatorPrecedence(operator: str):
+    """ Function to return the operator precedence.
+
+    Operators are organized in this order: 
+
+    | Operators | - | + | * | / | ^ |
+    | Values    | 1 | 1 | 2 | 2 | 3 |
+    
+    """
+
+    if not isOperator(operator):
+        return "Error: 000032 - Missuse of operator."
+    
+    if operator in ['-', '+']:
+        return 1
+    elif operator in ['*', '/']:
+        return 2
+    elif operator in ['^']:
+        return 3
+    else:
+        return "not expected operator"
+
+
 def operatorsComparison(op1: str, op2: str) -> bool:
     """ Function to compare two operators.
 
     Operators are organized in this order: 
 
-    | Operators | - | + | * | / | ^ |
-    | Values    | 1 | 2 | 3 | 4 | 5 |
+        | Operators | - | + | * | / | ^ |
+        | Values    | 1 | 2 | 3 | 4 | 5 |
 
     Ex.: '^' is higher than '+' 
 
     Returns:
-      True: if op2 value is higher than op1. 
-      False: if op2 value is inferior  than op1
+        True: if op2 value is higher than op1. 
+        False: if op2 value is inferior or equal than op1
     
     """
       
@@ -49,22 +73,70 @@ def operatorsComparison(op1: str, op2: str) -> bool:
         return "Error: 000033 - Missuse of comparison function.\
         Make sure both paramerets are operators"
 
-    operator_order = ['+', '-', '*', '/', '^']
-
-    if operator_order.index(op2) > operator_order.index(op1):
+    if operatorPrecedence(op2) > operatorPrecedence(op1):
         return True
     else:
         return False
-    
 
-def toPostfix(infix: str) -> str:
+
+def convertRawExpression(expression: str):
+    """ Receive a math expression and return into algebraic
+        expression where all numbers are letters. 
+    
+    Parameters:
+        expression (str): example "10+5*2".
+
+    Returns:
+        correlated_letters (list): list of dicts correlating 
+            letters to numbers in expression
+
+        correlated_expression (list): algebraic version of the passed expression
+    """
+    letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    character_list = []
+    still_number = False
+    correlated_letters = []
+    correlated_expression = ""
+    count = 0
+
+
+    for char in expression:
+        if isOperator(char):
+            still_number = False
+            character_list.append(char)
+            correlated_expression += char
+        
+        elif still_number:
+            character_list[-1] += char
+        
+        elif isOperand(char):
+            still_number = True
+            character_list.append(char)
+            correlated_expression += letters[count]
+            count += 1
+
+
+    count = 0
+    for value in character_list:
+        if isOperator(value):
+            correlated_letters.append({f'{value}': value})
+        else:
+            correlated_letters.append({f'{letters[count]}': value})
+            count += 1
+
+
+    return correlated_letters, correlated_expression
+
+
+def infixToPostfix(infix: str) -> str:
     """ Converts infix to postfix.
 
     Ex.: "(a+b) + c * d" becomes "ab+cd*"
 
-    Return:
+    Returns:
 
-    str: postfix expression
+        str: postfix expression
 
     """
     stack = []
@@ -79,11 +151,13 @@ def toPostfix(infix: str) -> str:
                 stack.append(char)
     
             elif operatorsComparison(stack[-1], char):
-                #  In case char priority is higher than the top character on stack
+                # In case char priority is higher than the top 
+                # character on stack
                 stack.append(char)
         
             elif (operatorsComparison(stack[-1], char) == False):
-                #  In case char priority is lower than the top character on stack
+                # In case char priority is lower than the top 
+                # character on stack
                 postfix += stack.pop()
                 while(not isEmpty(stack)):
                     if not operatorsComparison(stack[-1], char):
@@ -110,7 +184,8 @@ def toPostfix(infix: str) -> str:
 
 
         else:
-            return f"Error: 000080 - Value '{char}' not expected on expression."
+            return f"Error: 000080 - Value '{char}' not expected"\
+                "on expression."
 
 
     while(not isEmpty(stack)):
@@ -120,4 +195,8 @@ def toPostfix(infix: str) -> str:
 
 
 # "MAIN"
-print(toPostfix("K+L-M*N+(O^P)*W/U/V*T+Q"))
+algebrica = "K+L-M*N+(O^P)*W/U/V*T+Q"
+expressao = "58+85*2"
+print(convertRawExpression(expressao))
+
+#print(infixToPostfix(inputado))
