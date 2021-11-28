@@ -58,14 +58,14 @@ def operatorsComparison(op1: str, op2: str) -> bool:
 
     Operators are organized in this order: 
 
-    | Operators | - | + | * | / | ^ |
-    | Values    | 1 | 2 | 3 | 4 | 5 |
+        | Operators | - | + | * | / | ^ |
+        | Values    | 1 | 2 | 3 | 4 | 5 |
 
     Ex.: '^' is higher than '+' 
 
     Returns:
-      True: if op2 value is higher than op1. 
-      False: if op2 value is inferior or equal than op1
+        True: if op2 value is higher than op1. 
+        False: if op2 value is inferior or equal than op1
     
     """
       
@@ -77,16 +77,66 @@ def operatorsComparison(op1: str, op2: str) -> bool:
         return True
     else:
         return False
+
+
+def convertRawExpression(expression: str):
+    """ Receive a math expression and return into algebraic
+        expression where all numbers are letters. 
     
+    Parameters:
+        expression (str): example "10+5*2".
+
+    Returns:
+        correlated_letters (list): list of dicts correlating 
+            letters to numbers in expression
+
+        correlated_expression (list): algebraic version of the passed expression
+    """
+    letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    character_list = []
+    still_number = False
+    correlated_letters = []
+    correlated_expression = ""
+    count = 0
+
+
+    for char in expression:
+        if isOperator(char):
+            still_number = False
+            character_list.append(char)
+            correlated_expression += char
+        
+        elif still_number:
+            character_list[-1] += char
+        
+        elif isOperand(char):
+            still_number = True
+            character_list.append(char)
+            correlated_expression += letters[count]
+            count += 1
+
+
+    count = 0
+    for value in character_list:
+        if isOperator(value):
+            correlated_letters.append({f'{value}': value})
+        else:
+            correlated_letters.append({f'{letters[count]}': value})
+            count += 1
+
+
+    return correlated_letters, correlated_expression
+
 
 def infixToPostfix(infix: str) -> str:
     """ Converts infix to postfix.
 
     Ex.: "(a+b) + c * d" becomes "ab+cd*"
 
-    Return:
+    Returns:
 
-    str: postfix expression
+        str: postfix expression
 
     """
     stack = []
@@ -144,7 +194,9 @@ def infixToPostfix(infix: str) -> str:
     return postfix
 
 
-"""# "MAIN"
-inputado = "K+L-M*N+(O^P)*W/U/V*T+Q"
-expressao = "a+(b*2)"
-print(infixToPostfix(inputado))"""
+# "MAIN"
+algebrica = "K+L-M*N+(O^P)*W/U/V*T+Q"
+expressao = "58+85*2"
+print(convertRawExpression(expressao))
+
+#print(infixToPostfix(inputado))

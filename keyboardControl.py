@@ -1,8 +1,8 @@
 #https://pypi.org/project/keyboard/
 #https://www.alura.com.br/artigos/lidando-com-datas-e-horarios-no-python?gclid=Cj0KCQjwh_eFBhDZARIsALHjIKc2JK2cjk2oCchari_Zm32PCFAyorN04KnCiZsrsa1IKZO0EeNPp0PfpIaAu2hEALw_wcB
 
-import keyboard, time
-from datetime import date, datetime
+import keyboard
+from datetime import date
 
 today_date = date.today()
 today_date = today_date.strftime('%d/%m/%Y')
