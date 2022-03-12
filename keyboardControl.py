@@ -9,7 +9,7 @@ today_date = today_date.strftime('%d/%m/%Y')
 
 a = 0
 typed = str()
-desconsiderar = ['shift', 'space']
+desconsiderar = ['shift', 'space', 'enter']
 
 #keyboard.write(today_date)
 #keyboard.add_hotkey('ins + d', lambda: keyboard.write(today_date))

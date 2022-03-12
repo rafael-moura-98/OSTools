@@ -1,3 +1,6 @@
+from cgi import test
+
+
 def isOperand(char) -> bool:
     if char in "123456789abcdefghijklmnopqrstuvwxyz"\
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
@@ -196,7 +199,9 @@ def infixToPostfix(infix: str) -> str:
 
 # "MAIN"
 algebrica = "K+L-M*N+(O^P)*W/U/V*T+Q"
-expressao = "58+85*2"
-print(convertRawExpression(expressao))
+expressao = "5548+85*2"
+teste = convertRawExpression(expressao)
+print(teste)
+print(infixToPostfix(teste[1]))
 
 #print(infixToPostfix(inputado))
