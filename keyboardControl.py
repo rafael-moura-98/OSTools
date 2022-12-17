@@ -9,35 +9,33 @@ today_date = today_date.strftime('%d/%m/%Y')
 
 a = 0
 typed = str()
-desconsiderar = ['shift', 'space', 'enter']
+IGNORE = ['shift', 'space', 'enter']
+NUMBERS_AND_OPERATORS = '1234567890+*-/^'
 
-#keyboard.write(today_date)
-#keyboard.add_hotkey('ins + d', lambda: keyboard.write(today_date))
-#keyboard.add_hotkey('=', lambda: keyboard.record(until = 'p'))
-keyboard.add_hotkey('ctrl+1', lambda: keyboard.write(today_date))
+# keyboard.write(today_date)
+# keyboard.add_hotkey('ins + d', lambda: keyboard.write(today_date))
+# keyboard.add_hotkey('=', lambda: keyboard.record(until = 'p'))
+# keyboard.add_abbreviation('td.', today_date)
+keyboard.add_hotkey('ctrl+d', lambda: keyboard.write(today_date))
 keyboard.add_hotkey('ctrl+shift+d', lambda: keyboard.write("Funfou"))
 keyboard.add_abbreviation('@@', 'rafaelmoura1977@gmail.com')
-keyboard.add_abbreviation('td.', today_date)
 keyboard.add_abbreviation('mn.', '21 9 97857698')
 keyboard.add_abbreviation('rf.', 'Rafael Moura Santos da Silchara')
 
-
+recorded = ''
+math_operation = ''
 while keyboard.read_key() != "esc":
-    if keyboard.read_key() == "=":
-        typed = ''
-        while keyboard.read_key() != ']':
-            char = keyboard.read_key()
+    if keyboard.read_key() == "[":
+        recorded = keyboard.record(until=']')
 
-            if char not in desconsiderar:
-                if char == 'backspace':
-                    typed = typed[:-1]
-                else:
-                    typed += char
-            
-        if typed[-1] == ']':
-            typed = typed[:-1]
-
-        print(typed)
+        for char in recorded:
+            if char.event_type == 'down' and \
+                char.name in NUMBERS_AND_OPERATORS:
+                math_operation += char.name
+    
+    recorded = ''
+    
+print(math_operation)
 
 
 
