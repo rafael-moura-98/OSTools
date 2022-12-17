@@ -24,6 +24,10 @@ Graphic User Interface where will be find a configuration tab to modify the defa
 - PySimpleGUI
 - Datetime
 
+# Other documentations
+- [Keyboard module document](https://pypi.org/project/keyboard/)
+
+
 # Interface
 
 # Math resolver
