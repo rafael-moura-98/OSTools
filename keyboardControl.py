@@ -2,6 +2,8 @@ import keyboard
 
 from datetime import date
 
+from expressionSolver import main as calc
+
 NUMBERS_AND_OPERATORS = '1234567890+*-/^'
 
 today_date = date.today()
@@ -27,6 +29,17 @@ def read_operation():
         if char.event_type == 'down' and \
             char.name in NUMBERS_AND_OPERATORS:
             math_operation += char.name
+        
+        if char.event_type == 'down' and \
+            char.name == 'backspace':
+            math_operation = math_operation[0:-1]
+
+        if char.event_type == 'down' and \
+            char.name in ['enter', 'left', 'right']:
+            """ If these inputs are given in the middle of a expression,
+             the whole expression will be ignroed."""
+            keyboard.wait(']')  # Forces the record method to stop.
+            return None
 
     return str(math_operation)
 
@@ -36,8 +49,17 @@ while keyboard.read_key() != "esc":
         output = read_operation()
         print(output)
 
-        for _ in range(len(output) + 2):
-            keyboard.press_and_release('backspace')
+        if output is not None:
+            for _ in range(len(output) + 2):
+                keyboard.press_and_release('backspace')
+
+            keyboard.write(
+                str(calc(output))
+                )
 
 
-
+"""
+Knowm problems:
+- Não aceita parenteses nas expressoes
+- Expression is messed when forced to leave with 'enter', 'left' or 'right' keys. 
+"""

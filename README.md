@@ -42,4 +42,7 @@ It is a function created to convert infix expression to postfix. Infix expressio
 
 You can learn more about the infix to postfix convertion by watching the amazing video made by Jayanti Khatri Lamba on this [link](https://www.youtube.com/watch?v=PAceaOSnxQs&t=380s&ab_channel=Jenny%27slecturesCS%2FITNET%26JRF)
 
+# Knowm limitations
+
+When the expression is being typed, if the user uses the mouse to change part of it besided the end, it'll always be undestood as a input in the end of the expression. 
 

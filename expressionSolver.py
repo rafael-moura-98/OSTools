@@ -238,14 +238,19 @@ def calculate(postfix_expression, raw_expression):
     return stack.pop()
 
 
-# "MAIN"
+def main(math_expression):
+    raw_expression = convertRawExpression(math_expression)
+    postfix_expression = infixToPostfix(raw_expression[1])
+
+    result = calculate(postfix_expression, raw_expression[0])
+    print(result)
+    return result
+
+
+# MAIN
+
 #algebrica = "K+L-M*N+(O^P)*W/U/V*T+Q"
 
-expressao = "25.5+0.1"
+#expressao = "25.5+0.1"
 
-raw_expression = convertRawExpression(expressao)
-print(f'Raw form: {raw_expression}')
-
-test_postfix = infixToPostfix(raw_expression[1])
-
-print(f'Resultado: {calculate(test_postfix, raw_expression[0])}')
+#print(main(expressao))
