@@ -1,7 +1,9 @@
-from cgi import test
-
-
 def isOperand(char) -> bool:
+    """ Return True if the passed char is a operand
+    
+    In this context operands are any simbol that represents a number
+    like 'x', 'y' or of course, a number itself. """
+
     if char in "123456789abcdefghijklmnopqrstuvwxyz"\
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
         return True
@@ -10,7 +12,17 @@ def isOperand(char) -> bool:
 
 
 def isOperator(char)  -> bool:
-    """ Return True if the passed char is a operator """
+    """ Return True if the passed char is a operator 
+    
+    Here, all mapped operators are:
+
+    '-': minus;
+    '+': plus;
+    '*': multiply;
+    '/': divide;
+    '^': power;
+    """
+
     if char in "-+*/^":
         return True
     else:
@@ -99,10 +111,9 @@ def convertRawExpression(expression: str):
 
     character_list = []
     still_number = False
-    correlated_letters = []
+    correlated_letters = {}
     correlated_expression = ""
     count = 0
-
 
     for char in expression:
         if isOperator(char):
@@ -119,15 +130,11 @@ def convertRawExpression(expression: str):
             correlated_expression += letters[count]
             count += 1
 
-
     count = 0
     for value in character_list:
-        if isOperator(value):
-            correlated_letters.append({f'{value}': value})
-        else:
-            correlated_letters.append({f'{letters[count]}': value})
+        if not isOperator(value):
+            correlated_letters[letters[count]] = value
             count += 1
-
 
     return correlated_letters, correlated_expression
 
@@ -197,11 +204,48 @@ def infixToPostfix(infix: str) -> str:
     return postfix
 
 
-# "MAIN"
-algebrica = "K+L-M*N+(O^P)*W/U/V*T+Q"
-expressao = "5548+85*2"
-teste = convertRawExpression(expressao)
-print(teste)
-print(infixToPostfix(teste[1]))
+def calculate(postfix_expression, raw_expression):
+    """https://www.codespeedy.com/calculate-a-postfix-expression-using-stack-in-cpp/ """
 
-#print(infixToPostfix(inputado))
+    x = 0
+    y = 0
+
+    stack = []
+    for char in postfix_expression:
+        if isOperand(char):            
+            stack.append(
+                raw_expression[char]
+            )
+        
+        elif isOperator(char):
+            x = float(stack.pop())
+            y = float(stack.pop())
+
+            if char == '+':
+                stack.append(y + x)
+            elif char == '-':
+                stack.append(y - x)
+            elif char == '*':
+                stack.append(y * x)
+            elif char == '/':
+                stack.append(y / x)
+            elif char == '^':
+                stack.append(y ** x)
+
+        else:
+            print(f'The simbol {char} was used and is not knowm in a operation. Exiting...')
+
+    return stack.pop()
+
+
+# "MAIN"
+#algebrica = "K+L-M*N+(O^P)*W/U/V*T+Q"
+
+expressao = "25.5+0.1"
+
+raw_expression = convertRawExpression(expressao)
+print(f'Raw form: {raw_expression}')
+
+test_postfix = infixToPostfix(raw_expression[1])
+
+print(f'Resultado: {calculate(test_postfix, raw_expression[0])}')

@@ -41,6 +41,3 @@ while keyboard.read_key() != "esc":
 
 
 
-
-
-#keyboard.wait('esc')
