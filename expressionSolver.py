@@ -240,7 +240,9 @@ def calculate(postfix_expression, raw_expression):
 
 def main(math_expression):
     raw_expression = convertRawExpression(math_expression)
+    print(raw_expression)
     postfix_expression = infixToPostfix(raw_expression[1])
+    print(postfix_expression)
 
     result = calculate(postfix_expression, raw_expression[0])
     print(result)

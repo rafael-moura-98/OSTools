@@ -2,21 +2,45 @@ import PySimpleGUI as sg
 
 class telaPython:
     def __init__(self):
-        #Layout
+        sg.theme('LightBlue2')
+
         layout = [
-            [sg.Text('Nome'), sg.Input()],
-            [sg.Text('Idade'), sg.Input()],
-            [sg.Button('Enviar Dados')]
+            [sg.Text('EXPRESSION:')],
+            [sg.Input()],
+            [sg.Button('Calculate')]
         ]
 
-        #Janela
-        window = sg.Window("Dados do Usuario").layout(layout)
+        self.window = sg.Window(
+            'Calculate Expression',
+            layout=layout,
+            grab_anywhere=True,
+            finalize=True
+        )
 
-        #Extrair dados da tela
-        self.button, self.values = window.Read()
+        self.screen_width, self.screen_height = self.window.get_screen_size()
+        self.window_width, self.window_height = self.window.size
+        self.window.bind('<Escape>', '-ESCAPE-')
+        self.window.bind('<Key-Return>', '-ENTER-')
 
-    def Start(self):
-        print(self.values)
+    def run(self):
+        # Extrair dados da tela
+        self.event, self.values = self.window.Read()
+
+        if self.event in (sg.WINDOW_CLOSED, '-ESCAPE-'):
+            exit()
+        
+        if self.event in ('-ENTER-', 'Calculate'):
+            print('Calculate was pressed!')
+            print(self.values)
+
+    def windows_botton_right(self):
+        x = (self.screen_width - self.window_width - 50)
+        y = (self.screen_height - self.window_height - 100)
+        self.window.move(x, y)
+
 
 tela = telaPython()
-tela.Start()
+tela.windows_botton_right()
+while True:
+    tela.run()
+
